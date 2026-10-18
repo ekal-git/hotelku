@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a1620">
+<title>HotelKu - Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet"></head>
+<body>
+<div id="nav"></div>
+<header class="hero-banner slim noprint">
+  <div class="hb"></div><canvas data-dust></canvas>
+  <div class="container">
+    <p class="mb-2 small">Panel admin</p>
+    <h1>Kelola kamar dan reservasi dengan tenang.</h1>
+  </div>
+</header>
+<main class="container float-up pb-2">
+  <div class="tabs noprint mb-3"><button class="on" data-t="dash"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="8" rx="2"/><rect x="13.5" y="3.5" width="7" height="5" rx="2"/><rect x="13.5" y="11.5" width="7" height="9" rx="2"/><rect x="3.5" y="14.5" width="7" height="6" rx="2"/></svg><span>Dashboard</span></button><button data-t="kamar"><svg viewBox="0 0 24 24"><path d="M3 18V7m0 6h18v5M21 18v-3.5A3.5 3.5 0 0 0 17.5 11H11v2"/><circle cx="7" cy="10" r="1.8"/></svg><span>Kamar</span></button><button data-t="rsv"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4m8-4v4M4 10h16"/></svg><span>Reservasi</span></button><button data-t="tamu"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 19a6 6 0 0 1 12 0"/><path d="M16 5.2a3.2 3.2 0 0 1 0 5.6M18.5 14.5A6 6 0 0 1 21 19"/></svg><span>Data tamu</span></button><button data-t="lap"><svg viewBox="0 0 24 24"><path d="M7 3.5h7l4.5 4.5v12a1 1 0 0 1-1 1h-10.5a1 1 0 0 1-1-1v-15.5a1 1 0 0 1 1-1z"/><path d="M13.5 3.5V8H18M9 13h6M9 16.5h4"/></svg><span>Laporan</span></button></div>
+
+  <section id="dash" class="sec on"><div class="row g-3" id="stats"></div><div class="row g-3 mt-1" id="dashx"></div></section>
+
+  <section id="kamar" class="sec">
+    <div class="panel mb-3 noprint"><h4 class="h5" id="kt">Tambah kamar</h4><div class="row g-2">
+      <div class="col-6 col-md-2"><input id="kn" class="form-control" placeholder="No. kamar"></div>
+      <div class="col-6 col-md-2"><select id="kj" class="form-select"><option>Standard</option><option>Deluxe</option><option>Suite</option></select></div>
+      <div class="col-6 col-md-2"><input id="kh" type="number" class="form-control" placeholder="Harga/malam"></div>
+      <div class="col-6 col-md-2"><input id="kk" type="number" class="form-control" placeholder="Kapasitas"></div>
+      <div class="col-6 col-md-2"><select id="ks" class="form-select"><option value="tersedia">Tersedia</option><option value="maintenance">Maintenance</option></select></div>
+      <div class="col-6 col-md-2"><button id="kb" class="btn btn-ink w-100">Simpan</button></div>
+      <div class="col-12"><input id="kf" class="form-control" placeholder="Fasilitas (contoh: AC, TV, Wi-Fi, sarapan)"></div></div></div>
+    <div class="panel table-wrap"><table class="table table-stack align-middle mb-0"><thead><tr><th>No</th><th>Tipe</th><th>Harga</th><th>Kap.</th><th>Status</th><th class="noprint"></th></tr></thead><tbody id="kbody"></tbody></table></div>
+  </section>
+
+  <section id="rsv" class="sec">
+    <div class="panel mb-3 noprint"><div class="input-group"><input id="cari" class="form-control" placeholder="Cari kode booking atau nama tamu"><button class="btn btn-ink" id="cb">Cari</button></div></div>
+    <div class="panel table-wrap"><table class="table table-stack align-middle mb-0"><thead><tr><th>Kode</th><th>Tamu</th><th>Kamar</th><th>Tanggal</th><th>Total</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="vbody"></tbody></table></div>
+  </section>
+
+  <section id="tamu" class="sec"><div class="panel table-wrap"><table class="table table-stack mb-0"><thead><tr><th>Nama</th><th>Email</th><th>No. HP</th><th>Jumlah reservasi</th></tr></thead><tbody id="ubody"></tbody></table></div></section>
+
+  <section id="lap" class="sec">
+    <div class="panel mb-3 noprint"><div class="row g-2 align-items-end">
+      <div class="col-6 col-md-3"><label class="small">Dari (tanggal check-in)</label><input id="ld" type="date" class="form-control"></div>
+      <div class="col-6 col-md-3"><label class="small">Sampai</label><input id="ls" type="date" class="form-control"></div>
+      <div class="col-6 col-md-3"><button id="lb" class="btn btn-ink w-100">Tampilkan</button></div>
+      <div class="col-6 col-md-3"><button class="btn btn-brass w-100" onclick="print()">Cetak laporan</button></div></div></div>
+    <div class="panel"><h4>Laporan reservasi HotelKu</h4><p class="small" id="lper"></p>
+      <div class="table-wrap"><table class="table table-sm table-stack"><thead><tr><th>Kode</th><th>Tamu</th><th>Kamar</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Total</th></tr></thead><tbody id="lbody"></tbody></table></div>
+      <p class="mb-0 fw-bold" id="ltot"></p></div>
+  </section>
+</main>
+<div id="foot"></div>
+<script type="module">
+import { db } from "./js/firebase-config.js";
+import { $, rp, tgl, badge, stLabel, guard, showStruk, toast, uiConfirm, countUp } from "./js/common.js";
+import { collection, getDocs, addDoc, setDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+let R = [], V = [], U = [], editId = null;
+const NEXT = { pending: "dikonfirmasi", dikonfirmasi: "checkin", checkin: "selesai" };
+const load = async n => (await getDocs(collection(db, n))).docs.map(d => ({ id: d.id, ...d.data() }));
+async function refresh() {
+  [R, V, U] = await Promise.all([load("rooms"), load("reservations"), load("users")]);
+  V.sort((a, b) => b.dibuat - a.dibuat);
+  dash(); kamar(); rsv(V); tamu(); lap();
+}
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".tabs button,.sec").forEach(e => e.classList.remove("on"));
+  b.classList.add("on"); $(b.dataset.t).classList.add("on");
+});
+guard("admin", refresh);
+
+function dash() {
+  const aktif = V.filter(v => v.status !== "batal");
+  const IC = {
+    r: '<svg viewBox="0 0 24 24"><path d="M3 18V7m0 6h18v5M21 18v-3.5A3.5 3.5 0 0 0 17.5 11H11v2"/><circle cx="7" cy="10" r="1.8"/></svg>',
+    v: '<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4m8-4v4M4 10h16"/></svg>',
+    w: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>',
+    p: '<svg viewBox="0 0 24 24"><path d="M4 18l5-6 4 3 7-9"/><path d="M15 6h5v5"/></svg>' };
+  const item = (l, v, ic, i) => `<div class="col-6 col-md-3"><div class="panel stat stat-card" style="--i:${i}"><div class="ic">${ic}</div><div class="small lbl">${l}</div><b class="num">${v}</b></div></div>`;
+  $("stats").innerHTML = item("Jumlah kamar", R.length, IC.r, 0) + item("Total reservasi", aktif.length, IC.v, 1) +
+    item("Menunggu konfirmasi", V.filter(v => v.status === "pending").length, IC.w, 2) +
+    item("Pendapatan (lunas)", rp(V.filter(v => v.lunas && v.status !== "batal").reduce((s, v) => s + v.total, 0)), IC.p, 3);
+  countUp($("stats"));
+  dashExtra();
+}
+/* ringkasan visual (dihitung dari data yang sudah dimuat, tanpa query baru) */
+function dashExtra() {
+  const C = { pending: "#8b98a3", dikonfirmasi: "#8fb5dc", checkin: "#c9a35f", selesai: "#2f8f6b", batal: "#c4473d" };
+  const n = Object.fromEntries(Object.keys(C).map(k => [k, V.filter(v => v.status === k).length]));
+  const tot = V.length || 1;
+  const bar = Object.keys(C).filter(k => n[k]).map(k => `<i style="--w:${n[k] / tot * 100}%;background:${C[k]}" title="${stLabel(k)}: ${n[k]}"></i>`).join("");
+  const leg = Object.keys(C).map(k => `<span style="--c:${C[k]}">${stLabel(k)} ${n[k]}</span>`).join("");
+  const rec = V.slice(0, 5).map((v, i) => `<li style="--i:${i}"><div><b>${v.nama}</b><small>${v.kode} - Kamar ${v.noKamar}</small></div>${badge(v.status)}</li>`).join("")
+    || `<li><small>Belum ada reservasi.</small></li>`;
+  $("dashx").innerHTML = `<div class="col-lg-5"><div class="panel h-100"><h4 class="h5 mb-0">Status reservasi</h4>
+    <div class="bar-stack">${bar}</div><div class="legend">${leg}</div></div></div>
+    <div class="col-lg-7"><div class="panel h-100"><h4 class="h5 mb-0">Reservasi terbaru</h4><ul class="recent">${rec}</ul></div></div>`;
+}
+function kamar() {
+  $("kbody").innerHTML = R.length ? R.sort((a, b) => a.noKamar.localeCompare(b.noKamar)).map(r => `<tr><td>${r.noKamar}</td><td>${r.tipe}</td><td>${rp(r.harga)}</td><td>${r.kapasitas}</td><td><span class="pill pill-${r.status}">${r.status}</span></td>
+    <td class="noprint text-nowrap"><button class="btn btn-sm btn-outline-secondary" onclick="ubahK('${r.id}')">Ubah</button> <button class="btn btn-sm btn-outline-danger" onclick="hapusK('${r.id}')">Hapus</button></td></tr>`).join("")
+    : `<tr><td colspan="6">Belum ada kamar. Isi form di atas untuk menambah kamar pertama.</td></tr>`;
+}
+$("kb").onclick = async () => {
+  const d = { noKamar: $("kn").value.trim(), tipe: $("kj").value, harga: +$("kh").value, kapasitas: +$("kk").value, status: $("ks").value, fasilitas: $("kf").value };
+  if (!d.noKamar || !d.harga || !d.kapasitas) return toast("Nomor kamar, harga, dan kapasitas wajib diisi.", "error");
+  editId ? await setDoc(doc(db, "rooms", editId), d) : await addDoc(collection(db, "rooms"), d);
+  editId = null; $("kt").textContent = "Tambah kamar"; ["kn", "kh", "kk", "kf"].forEach(i => $(i).value = ""); refresh(); toast("Data kamar tersimpan", "success");
+};
+window.ubahK = id => {
+  const r = R.find(x => x.id === id); editId = id; $("kt").textContent = "Ubah kamar " + r.noKamar;
+  $("kn").value = r.noKamar; $("kj").value = r.tipe; $("kh").value = r.harga; $("kk").value = r.kapasitas; $("ks").value = r.status; $("kf").value = r.fasilitas || "";
+  scrollTo({ top: 0, behavior: "smooth" });
+};
+window.hapusK = async id => { if (await uiConfirm("Hapus kamar ini?", { title: "Hapus kamar", ok: "Ya, hapus", cancel: "Tidak", danger: true })) { await deleteDoc(doc(db, "rooms", id)); refresh(); toast("Kamar dihapus", "info"); } };
+
+function rsv(list) {
+  $("vbody").innerHTML = list.length ? list.map(v => `<tr><td>${v.kode}</td><td>${v.nama}</td><td>${v.noKamar}</td><td>${tgl(v.in)} - ${tgl(v.out)}</td>
+    <td>${rp(v.total)}<br>${v.lunas ? '<span class="badge text-bg-success">Lunas</span>' : '<span class="badge text-bg-warning">Belum bayar</span>'}</td><td>${badge(v.status)}</td>
+    <td class="text-nowrap">${NEXT[v.status] ? `<button class="btn btn-sm btn-ink" onclick="ubahS('${v.id}','${NEXT[v.status]}')">${stLabel(NEXT[v.status])}</button> ` : ""}
+    ${!v.lunas && v.status !== "batal" ? `<button class="btn btn-sm btn-brass" onclick="lunas('${v.id}')">Tandai lunas</button> ` : ""}
+    ${v.status !== "batal" && v.status !== "selesai" ? `<button class="btn btn-sm btn-outline-danger" onclick="ubahS('${v.id}','batal')">Batal</button> ` : ""}
+    <button class="btn btn-sm btn-outline-secondary" onclick="struk('${v.id}')">Struk</button></td></tr>`).join("")
+    : `<tr><td colspan="7">Tidak ada reservasi yang cocok.</td></tr>`;
+}
+$("cb").onclick = () => { const q = $("cari").value.trim().toLowerCase(); rsv(V.filter(v => v.kode.toLowerCase().includes(q) || v.nama.toLowerCase().includes(q))); };
+window.ubahS = async (id, s) => { await updateDoc(doc(db, "reservations", id), { status: s }); refresh(); };
+window.lunas = async id => { if (await uiConfirm("Tandai reservasi ini sudah dibayar di kasir?", { title: "Tandai lunas", ok: "Ya, sudah dibayar" })) { await updateDoc(doc(db, "reservations", id), { lunas: true }); refresh(); toast("Ditandai lunas", "success"); } };
+window.struk = id => showStruk(V.find(v => v.id === id));
+
+function tamu() {
+  const t = U.filter(u => u.role === "tamu");
+  $("ubody").innerHTML = t.length ? t.map(u => `<tr><td>${u.nama}</td><td>${u.email}</td><td>${u.hp || "-"}</td><td>${V.filter(v => v.userId === u.id).length}</td></tr>`).join("")
+    : `<tr><td colspan="4">Belum ada tamu terdaftar.</td></tr>`;
+}
+function lap() {
+  const a = $("ld").value, b = $("ls").value;
+  const l = V.filter(v => (!a || v.in >= a) && (!b || v.in <= b)).sort((x, y) => x.in.localeCompare(y.in));
+  $("lper").textContent = "Periode: " + (a ? tgl(a) : "awal") + " sampai " + (b ? tgl(b) : "sekarang") + ". Dicetak " + tgl(new Date());
+  $("lbody").innerHTML = l.map(v => `<tr><td>${v.kode}</td><td>${v.nama}</td><td>${v.noKamar}</td><td>${tgl(v.in)}</td><td>${tgl(v.out)}</td><td>${stLabel(v.status)}${v.lunas ? ", lunas" : ""}</td><td>${rp(v.total)}</td></tr>`).join("") || `<tr><td colspan="7">Tidak ada data pada periode ini.</td></tr>`;
+  const ok = l.filter(v => v.status !== "batal");
+  $("ltot").textContent = `${ok.length} reservasi aktif. Pendapatan lunas: ${rp(ok.filter(v => v.lunas).reduce((s, v) => s + v.total, 0))}. Belum dibayar: ${rp(ok.filter(v => !v.lunas).reduce((s, v) => s + v.total, 0))}.`;
+}
+$("lb").onclick = lap;
+</script></body></html>
